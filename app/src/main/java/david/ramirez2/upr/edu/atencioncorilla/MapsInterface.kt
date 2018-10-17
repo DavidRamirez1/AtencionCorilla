@@ -12,6 +12,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
 class MapsInterface : AppCompatActivity(), OnMapReadyCallback {
@@ -35,9 +36,11 @@ class MapsInterface : AppCompatActivity(), OnMapReadyCallback {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps_interface)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -58,7 +61,14 @@ class MapsInterface : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
         mMap.mapType = GoogleMap.MAP_TYPE_NORMAL
 
-        setPermission()
+        mMap.setOnMapClickListener{point: LatLng ->
+
+            mMap.addMarker(MarkerOptions().position(point).title("Testing"))
+         //   mMap.addMarker(MarkerOptions().)
+
+        }
+
+      //  setPermission()
 
       /*  if (ActivityCompat.checkSelfPermission(this,
                         android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -66,6 +76,14 @@ class MapsInterface : AppCompatActivity(), OnMapReadyCallback {
                     arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
             return
         }*/
+
+        // Asking for permissions to access User's locations
+
+        if (ActivityCompat.checkSelfPermission(this,
+                        android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+        }
 
         mMap.isMyLocationEnabled = true
         fusedLocationClient.lastLocation.addOnSuccessListener(this){ location ->
@@ -78,10 +96,15 @@ class MapsInterface : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
-        // Add a marker in Sydney and move the camera
-       /* val sydney = LatLng(18.46333, -66.105721)
+      //  mMap.addMarker(MarkerOptions().position(18.46333, -66.105721))
+
+
+      /*  // Add a marker in Sydney and move the camera
+        val sydney = LatLng(18.46333, -66.105721)
         mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        */
+        val sydney2 = LatLng(19.46333, -65.105721)
+        mMap.addMarker(MarkerOptions().position(sydney2).title("Marker in Sydney"))*/
+
        // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 12.0f))
     }
 }
